@@ -116,15 +116,12 @@ export class WebRTCIpService {
         if(!RTCPeerConnection){
             //NOTE: you need to have an iframe in the page right above the script tag
             //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
-            //<script>...getIPs called in here...
             var win = iframe.contentWindow;
             RTCPeerConnection = win.RTCPeerConnection
                 || win.mozRTCPeerConnection
                 || win.webkitRTCPeerConnection;
             useWebKit = !!win.webkitRTCPeerConnection;
         }
-
-        console.log('windowDetails', window)
 
         //minimal requirements for data connection
         var mediaConstraints = {
