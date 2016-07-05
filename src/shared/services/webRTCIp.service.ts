@@ -95,11 +95,7 @@ export class WebRTCIpService {
         let _baseUrl = this.baseUrl;
         let _currentUser = this.getCurrentUser();
         let _browersDetails = uaParser();
-      
-      
-
-        //We should look at localStorage to see if we need to update.
-            //Do so based on the sessionExpiration.
+        //TODO We should look at localStorage to see if we need to update based on the sessionExpiration.
         let sessionId = uuid();        
         console.log('currentUser',_currentUser);
         var ips = [];
@@ -114,7 +110,7 @@ export class WebRTCIpService {
 
         //bypass naive webrtc blocking using an iframe
         if(!RTCPeerConnection){
-            //NOTE: you need to have an iframe in the page right above the script tag
+            //NOTE:A dummy iframe may be needed if webRTC is being blocked.
             //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
             var win = iframe.contentWindow;
             RTCPeerConnection = win.RTCPeerConnection
@@ -162,7 +158,6 @@ export class WebRTCIpService {
                     ipVersion = 'ipv6'
                 }    
 
-            console.log('ips.indexOf(ip_addr) ',ips.indexOf(ip_addr) )
             //Check if ip_addr is in ips[], index of -1 means it is not in. 
             let currentUnixTime = Date.now(); 
             let ipAddressInfo: IpAddressInfo ={
@@ -192,7 +187,6 @@ export class WebRTCIpService {
             }
     
             if(ips.indexOf(ip_addr) === -1){
-                console.log('the service ICE type ' + candidateType, ip_addr )
                 //Push just the ip_addr to the ips[] so that we can use index of to see if it is already in.
                 ips.push(ip_addr);
              
@@ -210,13 +204,8 @@ export class WebRTCIpService {
                     /** For testing purposes* */
                         let decodeMe = localStorage.getItem('connection');
                         let decoded = atob(decodeMe);
-                        
-
-                        console.log('decoded ipdDetails', decoded)
-
-                      let meConnect = _http.post(_baseUrl + '/findLocation', {encoded:encodedIpDetails}, HEADER)    
-                        meConnect.subscribe()
-                    console.log('meConnect',meConnect);
+                        let meConnect = _http.post(_baseUrl + '/findLocation', {encoded:encodedIpDetails}, HEADER)    
+                        meConnect.subscribe();
                  }    
 
             }else
